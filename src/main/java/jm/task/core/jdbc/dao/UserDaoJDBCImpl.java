@@ -12,14 +12,21 @@ import java.util.List;
 
 public class UserDaoJDBCImpl extends Util implements UserDao {
     public UserDaoJDBCImpl() {
-
     }
+
     Connection connection= getConnection();
+
     public void createUsersTable() {
         String sql = "CREATE TABLE IF NOT EXISTS User (`id` INT PRIMARY KEY AUTO_INCREMENT,`name` VARCHAR(255), `lastName` VARCHAR(255),`age` INTEGER)";
         try(PreparedStatement preparedStatement=connection.prepareStatement(sql);) {
             preparedStatement.executeUpdate();
+            connection.commit();
         }catch (SQLException e){
+            try {
+                connection.rollback();
+            }catch (SQLException b){
+                b.printStackTrace();
+            }
             e.printStackTrace();
         }
     }
@@ -28,7 +35,13 @@ public class UserDaoJDBCImpl extends Util implements UserDao {
         String sql= "DROP TABLE IF EXISTS User";
         try(PreparedStatement preparedStatement=connection.prepareStatement(sql);) {
             preparedStatement.executeUpdate();
+            connection.commit();
         }catch (SQLException e){
+            try {
+                connection.rollback();
+            }catch (SQLException b){
+                b.printStackTrace();
+            }
             e.printStackTrace();
         }
     }
@@ -40,8 +53,14 @@ public class UserDaoJDBCImpl extends Util implements UserDao {
             preparedStatement.setString(2,lastName);
             preparedStatement.setInt(3,age);
             preparedStatement.executeUpdate();
+            connection.commit();
             System.out.println("User с именем – "+name+" добавлен в базу данных");
         }catch (SQLException e){
+            try {
+                connection.rollback();
+            }catch (SQLException b){
+                b.printStackTrace();
+            }
             e.printStackTrace();
         }
     }
@@ -51,7 +70,13 @@ public class UserDaoJDBCImpl extends Util implements UserDao {
         try(PreparedStatement preparedStatement=connection.prepareStatement(sql);) {
             preparedStatement.setLong(1,id);
             preparedStatement.executeUpdate();
+            connection.commit();
         }catch (SQLException e){
+            try {
+                connection.rollback();
+            }catch (SQLException b){
+                b.printStackTrace();
+            }
             e.printStackTrace();
         }
 
@@ -69,8 +94,14 @@ public class UserDaoJDBCImpl extends Util implements UserDao {
                 user.setLastName(rs.getString("lastName"));
                 user.setAge(rs.getByte("age"));
                 users.add(user);
+                connection.commit();
             }
         }catch (SQLException e){
+            try {
+                connection.rollback();
+            }catch (SQLException b){
+                b.printStackTrace();
+            }
             e.printStackTrace();
         }
         System.out.println(users);
@@ -81,7 +112,13 @@ public class UserDaoJDBCImpl extends Util implements UserDao {
         String sql="DELETE FROM User";
         try(PreparedStatement preparedStatement=connection.prepareStatement(sql);) {
             preparedStatement.executeUpdate();
+            connection.commit();
         }catch (SQLException e){
+            try {
+                connection.rollback();
+            }catch (SQLException b){
+                b.printStackTrace();
+            }
             e.printStackTrace();
         }
     }
