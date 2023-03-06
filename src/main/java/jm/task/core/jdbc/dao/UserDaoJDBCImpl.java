@@ -14,7 +14,7 @@ public class UserDaoJDBCImpl extends Util implements UserDao {
     public UserDaoJDBCImpl() {
     }
 
-    Connection connection= getConnection();
+    Connection connection= getConnectionJDBC();
 
     public void createUsersTable() {
         String sql = "CREATE TABLE IF NOT EXISTS User (`id` INT PRIMARY KEY AUTO_INCREMENT,`name` VARCHAR(255), `lastName` VARCHAR(255),`age` INTEGER)";
@@ -104,7 +104,6 @@ public class UserDaoJDBCImpl extends Util implements UserDao {
             }
             e.printStackTrace();
         }
-        System.out.println(users);
         return users;
     }
 
